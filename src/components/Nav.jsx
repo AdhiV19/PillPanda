@@ -24,10 +24,10 @@ function Nav() {
           <a href="#about" className="hover:text-pandaBlue">
             About
           </a>
-          <button className="px-4 py-1.5 border-pandaGreen border-2  rounded-md hover:bg-green-200 text-sm">
+          <button onClick={() => navigate("/login",{ state:{darkMode:darkMode}})} className="px-4 py-1.5 border-pandaGreen border-2  rounded-md hover:bg-green-200 text-sm">
             Log In
           </button>
-          <button onClick={() => navigate("/signup")} className="px-4 py-2 bg-pandaGreen text-pandaWhite rounded-md hover:opacity-70 text-sm dark:bg-pandaGreen dark:text-pandaBlack">
+          <button onClick={() => navigate("/signup",{ state:{darkMode:darkMode}})} className="px-4 py-2 bg-pandaGreen text-pandaWhite rounded-md hover:opacity-70 text-sm dark:bg-pandaGreen dark:text-pandaBlack">
             Sign Up
           </button>
           
