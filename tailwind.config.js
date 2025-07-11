@@ -23,6 +23,7 @@ export default {
       dropShadow: {
           white: '0 0 12px rgba(255, 255, 255, 0.4)',
         },
+        
     }
   },
   plugins: [],

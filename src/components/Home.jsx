@@ -3,12 +3,12 @@ import Nav from './Nav'
 import Body from './Body'
 import Footer from './Footer'
 
-function Home() {
+function Home({ darkMode, setDarkMode }) {
   return (
     <div>
-      <Nav/>
-      <Body/>
-      <Footer/>
+      <Nav darkMode={darkMode} setDarkMode={setDarkMode}/>
+      <Body darkMode={darkMode} setDarkMode={setDarkMode}/>
+      <Footer darkMode={darkMode} setDarkMode={setDarkMode}/>
     </div>
   )
 }

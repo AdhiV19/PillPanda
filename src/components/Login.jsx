@@ -1,22 +1,39 @@
 import React, { useEffect, useState } from 'react'
+import { useNavigate } from "react-router-dom";
 
-function Login() {
+function Login({ darkMode, setDarkMode }) {
     const [isPharmacist, setIsPharmacist] = useState(false);
       const [loading, setLoading] = useState(false);
-      const [darkMode, setDarkMode] = useState(false);
-    
-      useEffect(() => {
-        document.documentElement.classList.toggle("dark", darkMode);
-      }, [darkMode]);
-    
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setTimeout(() => {
-          alert("Form submitted successfully!");
-          setLoading(false);
-        }, 1500);
-      };
+
+
+const navigate = useNavigate();
+const [username, setUsername] = useState("");
+const [password, setPassword] = useState("");
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  const key = isPharmacist ? "pharmacists" : "patients";
+  console.log(key);
+  
+  const users = JSON.parse(localStorage.getItem(key)) || [];
+  console.log(users);
+  
+  const userByUsername = users.find((u) => u.username === username);
+
+  if (!userByUsername) {
+    alert("Invalid Username");
+  } else if (userByUsername.password !== password) {
+    alert("Incorrect Password");
+  } else {
+    alert("Login successful!");
+    navigate("/main", { state: { user: userByUsername } });
+  }
+};
+ 
+
+
+
 
   return (
     <>
@@ -38,7 +55,7 @@ function Login() {
       </div>
 
       <div className="min-h-screen flex flex-col items-center justify-start bg-no-repeat bg-cover bg-[url('/wh-bg.jpeg')] dark:bg-[url('/blueGradient.jpeg')] text-pandaBlack dark:text-pandaWhite px-4 py-8">
-        <img
+        <img onClick={() => navigate("/",)}
           src={darkMode ? "/logo_pillpanda_transp_bk.png" : "/logo_pillpanda_transp.png"}
           alt="PillPanda Logo"
           className="h-32 mb-4"
@@ -84,6 +101,8 @@ function Login() {
                   <input
                     type="text"
                     placeholder="UserName"
+                    name="username"
+                    onChange={(e) => setUsername(e.target.value)}
                     className="input"
                     required
                   />
@@ -91,7 +110,9 @@ function Login() {
                 </div>
                 <input
                   type="password"
+                  name="password"
                   placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
                   className="input"
                   required
                 />
@@ -104,6 +125,8 @@ function Login() {
                   <input
                     type="text"
                     placeholder="Licensee Name"
+                    onChange={(e) => setUsername(e.target.value)}
+                    name="username"
                     className="input"
                     required
                   />
@@ -112,6 +135,8 @@ function Login() {
                 <input
                   type="password"
                   placeholder="Password"
+                  onChange={(e) => setPassword(e.target.value)}
+                  name="password"
                   className="input"
                   required
                 />
@@ -128,8 +153,10 @@ function Login() {
           </form>
         </div>
       </div>
+      {}
     </>
   )
+  
 }
 
 export default Login;
