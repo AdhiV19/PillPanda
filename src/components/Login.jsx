@@ -27,7 +27,7 @@ const handleSubmit = (e) => {
     alert("Incorrect Password");
   } else {
     alert("Login successful!");
-    navigate("/main", { state: { user: userByUsername } });
+    navigate("/dash", { state: { user: userByUsername } });
   }
 };
  
