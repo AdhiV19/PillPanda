@@ -1,11 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import Dashpg from "./Dashpg";
 
 function Dashboard({ darkMode, setDarkMode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const user = location.state?.user;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [pharmacies, setPharmacies] = useState([]);
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("pharmacists")) || [];
+    setPharmacies(data);
+  }, []);
+
+  
 
   if (!user) {
     return (
@@ -85,28 +94,8 @@ function Dashboard({ darkMode, setDarkMode }) {
           </nav>
         </aside>
 
-        {/* Main Content */}
-        <main
-          className={`transition-all duration-300 flex-1 p-10 ${
-            sidebarOpen ? "ml-64" : "ml-16"
-          }`}
-        >
-          <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold">
-              <span className="text-pandaRed dark:text-pandaBlue">
-                Welcome,
-              </span>{" "}
-              <span className="text-pandaBlack dark:text-pandaWhite">
-                {user.firstName + " " + user.lastName} 👋
-              </span>
-            </h1>
-          </div>
-
-          <div className="text-pandaBlack dark:text-pandaWhite">hiiiiii</div>
-          <div className="mt-10 text-pandaBlack dark:text-pandaWhite">
-            <p>Select an option from the sidebar to get started.</p>
-          </div>
-        </main>
+{/* ✅ Main content moved to separate Dashpg component */}
+        <Dashpg darkMode={darkMode} sidebarOpen={sidebarOpen} />
       </div>
     </>
   );
@@ -114,12 +103,14 @@ function Dashboard({ darkMode, setDarkMode }) {
   function SidebarItem({ icon, label, open }) {
     return (
       <div
-        className="flex items-center gap-3 px-6 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-pandaWhite/10"
+        className="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-pandaWhite/10"
         title={!open ? label : ""}
       >
         <span className="text-lg">{icon}</span>
         {open && (
-          <span className="text-pandaBlack dark:text-pandaWhite">{label}</span>
+          <span className="text-pandaBlack dark:text-pandaWhite">
+            {label}
+          </span>
         )}
       </div>
     );
@@ -127,3 +118,5 @@ function Dashboard({ darkMode, setDarkMode }) {
 }
 
 export default Dashboard;
+
+// make a search bar in dash's main. the search bar should obtain the name from the apis:https://68724b0c76a5723aacd4392a.mockapi.io/pillpanda/medicines and https://68724b0c76a5723aacd4392a.mockapi.io/pillpanda/medicines1. when the matched names present in the dropdown there should be an add button which append that medicines details to the cart

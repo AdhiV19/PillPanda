@@ -282,6 +282,13 @@ function SignUp({ darkMode, setDarkMode }) {
                 </div>
                 <input
                   type="text"
+                  placeholder="Pharmacy Name"
+                  name="pharmacyname"
+                  className="input"
+                  required
+                />
+                <input
+                  type="text"
                   placeholder="Pharmacist License No"
                   name="licenseno."
                   className="input"
@@ -394,9 +401,9 @@ function SignUp({ darkMode, setDarkMode }) {
                     className="accent-green-300"
                     required
                   />
-                  <div className="text-xs">
+                  <span className="text-xs">
                     You agree to our Terms, Privacy Policy and Cookies Policy.
-                  </div>
+                  </span>
                 </div>
               </>
             )}
