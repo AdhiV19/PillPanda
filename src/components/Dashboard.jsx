@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dashpg from "./Dashpg";
+import PharmacyProfile from "./PharmacyProfile";
+import MedicineCart from "./MedicineCart";
 
 function Dashboard({ darkMode, setDarkMode }) {
   const location = useLocation();
@@ -8,6 +10,19 @@ function Dashboard({ darkMode, setDarkMode }) {
   const user = location.state?.user;
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [pharmacies, setPharmacies] = useState([]);
+  const [cart, setCart] = useState(() => {
+  const storedCart = localStorage.getItem("pillpanda-cart");
+  return storedCart ? JSON.parse(storedCart) : [];
+});
+useEffect(() => {
+  localStorage.setItem("pillpanda-cart", JSON.stringify(cart));
+}, [cart]);
+
+const [activePage, setActivePage] = useState("home"); 
+
+  const [selectedPharmacy, setSelectedPharmacy] = useState(null);
+  const [selectedCart, setSelectedCart] = useState(null);
+  
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("pharmacists")) || [];
@@ -81,8 +96,9 @@ function Dashboard({ darkMode, setDarkMode }) {
           </div>
 
           {/* Menu Items */}
-          <nav className="mt-8 space-y-5 text-sm font-semibold">
-            <SidebarItem icon="💊" label="Medicine Cart" open={sidebarOpen} />
+          <nav className="mt-8  space-y-5 text-sm font-semibold">
+            <SidebarItem icon="🏡" label="Home" open={sidebarOpen} onClick={() => setActivePage("home")}  />
+            <SidebarItem icon="💊" label="Medicine Cart" open={sidebarOpen} onClick={() => setActivePage("cart")}  />
             <SidebarItem icon="📦" label="Order History" open={sidebarOpen} />
             <SidebarItem
               icon="📝"
@@ -92,19 +108,45 @@ function Dashboard({ darkMode, setDarkMode }) {
             <SidebarItem icon="🔔" label="Notifications" open={sidebarOpen} />
             <SidebarItem icon="🧑" label="Profile" open={sidebarOpen} />
           </nav>
+          <div className="absolute bottom-2 ml-4 mb-1" >
+            <img onClick={() => navigate("/login",)}
+            src={"/power.svg"}
+            className={"ms-1 ml-3 h-6 w-6"}
+            alt={"Log Out"}
+          /></div>
         </aside>
 
-{/* ✅ Main content moved to separate Dashpg component */}
-        <Dashpg darkMode={darkMode} sidebarOpen={sidebarOpen} />
+{selectedPharmacy ? (
+  <PharmacyProfile
+    pharmacy={selectedPharmacy}
+    darkMode={darkMode}
+    sidebarOpen={sidebarOpen}
+    onBack={() => setSelectedPharmacy(null)}
+    cart={cart}
+    setCart={setCart} // ← important
+    activePage={activePage}
+    />
+  ) : (
+    <Dashpg
+    darkMode={darkMode}
+    setSelectedPharmacy={setSelectedPharmacy}
+    sidebarOpen={sidebarOpen}
+    activePage={activePage}
+    cart={cart}
+  />
+)}
+
+
       </div>
     </>
   );
 
-  function SidebarItem({ icon, label, open }) {
+  function SidebarItem({ icon, label, open,onClick }) {
     return (
       <div
-        className="flex items-center gap-3 px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-pandaWhite/10"
+        className="flex items-center gap-3 px-4 py-3 ps-7 cursor-pointer hover:bg-gray-100 dark:hover:bg-pandaWhite/10"
         title={!open ? label : ""}
+        onClick={onClick}
       >
         <span className="text-lg">{icon}</span>
         {open && (
@@ -119,4 +161,4 @@ function Dashboard({ darkMode, setDarkMode }) {
 
 export default Dashboard;
 
-// make a search bar in dash's main. the search bar should obtain the name from the apis:https://68724b0c76a5723aacd4392a.mockapi.io/pillpanda/medicines and https://68724b0c76a5723aacd4392a.mockapi.io/pillpanda/medicines1. when the matched names present in the dropdown there should be an add button which append that medicines details to the cart
+

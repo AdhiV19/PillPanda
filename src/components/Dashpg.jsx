@@ -1,12 +1,14 @@
 // Dashpg.jsx
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import MedicineCart from "./MedicineCart";
 
-function Dashpg({ darkMode, sidebarOpen }) {
+function Dashpg({ darkMode, sidebarOpen, setSelectedPharmacy,activePage,cart,setCart }) {
   const location = useLocation();
   const user = location.state?.user;
   const [pharmacies, setPharmacies] = useState([]);
-
+  
+  
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("pharmacists")) || [];
 
@@ -33,6 +35,9 @@ function Dashpg({ darkMode, sidebarOpen }) {
           sidebarOpen ? "ml-64" : "ml-20"
         }`}
       >
+        {activePage === "home" && (
+    <div>
+
         <h1 className="text-3xl font-bold text-pandaBlack dark:text-pandaWhite">
           <span className="text-pandaRed dark:text-pandaBlue">Welcome,</span>{" "}
           <span className="text-pandaBlack dark:text-pandaWhite">
@@ -53,14 +58,15 @@ function Dashpg({ darkMode, sidebarOpen }) {
             return (
               <div
                 key={idx}
-                className="bg-white dark:bg-pandaBlack shadow-lg rounded-lg p-4 border border-pandaGreen"
+                onClick={() => setSelectedPharmacy(pharmacy)}
+                className="bg-white dark:bg-pandaBlack shadow-lg dark:shadow-zinc-900 rounded-lg p-4 border border-pandaGreen"
               >
                 <img
                   src={imagePath}
                   alt="Pharmacy"
-                  className="w-full h-40 object-cover rounded-md mb-4"
+                  className="w-full h-48 object-contain rounded-md mb-4"
                 />
-                <h3 className="text-xl font-semibold text-pandaRed dark:text-pandaGreen">
+                <h3 className="text-xl font-semibold text-pandaBlack dark:text-pandaWhite">
                   {pharmacy.pharmacyname}
                 </h3>
                 <p className="text-sm text-slateGray mt-2">{pharmacy.street}</p>
@@ -68,6 +74,10 @@ function Dashpg({ darkMode, sidebarOpen }) {
             );
           })}
         </div>
+        </div>)}
+        {activePage === "cart" && (
+    <MedicineCart cart={cart}  setCart={setCart}/>
+  )}
       </main>
     </>
   );
