@@ -1,49 +1,76 @@
 import React from "react";
 
-function MedicineCart({ cart, setCart }) {
-  const handleCheckout = () => {
-    if (cart.length === 0) {
-      alert("Cart is already empty.");
-      return;
-    }
+function MedicineCart({ cart, setCart, pharmacy }) {
+    console.log(cart.length);
 
-    if (confirm("Proceed to checkout? This will clear your cart.")) {
-      setCart([ ]);
-      localStorage.removeItem("pillpanda-cart");
-      alert("Checkout complete. Cart cleared.");
-    }
-  };
+    const groupedByPharmacy = cart.reduce((acc, item) => {
+        const name = item.pharmacyname || "Unknown Pharmacy";
+        if (!acc[name]) acc[name] = [];
+        acc[name].push(item);
+        return acc;
+    }, {});
 
-  return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-pandaBlue">🛒 Medicine Cart</h2>
+    const handleCheckout = () => {
+        if (cart.length === 0) {
+            alert("Cart is already empty.");
+            return;
+        }
 
-      {cart.length === 0 ? (
-        <p className="text-slateGray">Cart is empty.</p>
-      ) : (
-        <ul className="space-y-4">
-          {cart.map((med, index) => (
-            <li
-              key={`${med.Name}-${index}`}
-              className="flex justify-between items-center bg-white dark:bg-pandaBlack rounded-lg shadow p-3"
+        if (confirm("Proceed to checkout? This will clear your cart.")) {
+            // 1. Copy cart to orders
+            const existingOrders = JSON.parse(localStorage.getItem("pillpanda-orders")) || [];
+
+            const newOrders = cart.map((item) => ({
+                ...item,
+                orderedAt: new Date().toISOString() // Attach current date
+            }));
+
+            const updatedOrders = [...existingOrders, ...newOrders];
+            localStorage.setItem("pillpanda-orders", JSON.stringify(updatedOrders));
+
+            // 2. Clear the cart
+            setCart([]);
+            localStorage.removeItem("pillpanda-cart");
+
+            alert("Checkout complete. Cart cleared.");
+        }
+    };
+
+
+    return (
+        <div className="p-6">
+            {Object.entries(groupedByPharmacy).map(([pharmacyName, medicines]) => (
+                <div key={pharmacyName} className="mb-6">
+                    <h2 className="text-xl font-bold text-pandaRed dark:text-pandaBlue mb-2">
+                        {pharmacyName}
+                    </h2>
+                    <ul className="space-y-2">
+                        {medicines.map((med) => (
+                            <li
+                                key={med.Sno}
+                                className="bg-white dark:bg-zinc-800 px-4 py-2 rounded shadow flex justify-between"
+                            >
+                                <span>{med.Name}</span>
+                                <span className="text-sm text-gray-500">Qty: {med.quantity}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
+
+
+            <button
+                onClick={handleCheckout}
+                disabled={cart.length === 0}
+                className={`mt-6 px-6 py-2 rounded transition 
+    ${cart.length === 0
+                        ? "text-2xl text-pandaWhite font-bold bg-pandaBlue dark:bg-pandaRed cursor-not-allowed -mt-3 -ml-10 "
+                        : "bg-pandaRed hover:bg-red-600 text-white"}`}
             >
-              <span className="font-medium text-pandaBlack dark:text-white">
-                {med.Name}
-              </span>
-              <span className="text-sm text-gray-500">Qty: {med.quantity}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <button
-        onClick={handleCheckout}
-        className="mt-6 bg-pandaRed text-white px-6 py-2 rounded hover:bg-red-600 transition"
-      >
-        Checkout
-      </button>
-    </div>
-  );
+                {cart.length === 0 ? "OOPS!...Cart is empty" : "Checkout"}
+            </button>
+        </div>
+    );
 }
 
 export default MedicineCart;

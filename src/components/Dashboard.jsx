@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dashpg from "./Dashpg";
 import PharmacyProfile from "./PharmacyProfile";
-import MedicineCart from "./MedicineCart";
+
+
 
 function Dashboard({ darkMode, setDarkMode }) {
   const location = useLocation();
@@ -11,25 +12,25 @@ function Dashboard({ darkMode, setDarkMode }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [pharmacies, setPharmacies] = useState([]);
   const [cart, setCart] = useState(() => {
-  const storedCart = localStorage.getItem("pillpanda-cart");
-  return storedCart ? JSON.parse(storedCart) : [];
-});
-useEffect(() => {
-  localStorage.setItem("pillpanda-cart", JSON.stringify(cart));
-}, [cart]);
+    const storedCart = localStorage.getItem("pillpanda-cart");
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
+  useEffect(() => {
+    localStorage.setItem("pillpanda-cart", JSON.stringify(cart));
+  }, [cart]);
 
-const [activePage, setActivePage] = useState("home"); 
+  const [activePage, setActivePage] = useState("home");
 
   const [selectedPharmacy, setSelectedPharmacy] = useState(null);
   const [selectedCart, setSelectedCart] = useState(null);
-  
+
 
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("pharmacists")) || [];
     setPharmacies(data);
   }, []);
 
-  
+
 
   if (!user) {
     return (
@@ -74,9 +75,8 @@ const [activePage, setActivePage] = useState("home");
                   : "/logo_pillpanda_transp.png"
               }
               alt="Logo"
-              className={`transition-all duration-150 ${
-                sidebarOpen ? "w-48" : "w-16"
-              }`}
+              className={`transition-all duration-150 ${sidebarOpen ? "w-48" : "w-16"
+                }`}
               onClick={() => setSidebarOpen(!sidebarOpen)}
             />
             <button
@@ -96,10 +96,10 @@ const [activePage, setActivePage] = useState("home");
           </div>
 
           {/* Menu Items */}
-          <nav className="mt-8  space-y-5 text-sm font-semibold">
-            <SidebarItem icon="🏡" label="Home" open={sidebarOpen} onClick={() => setActivePage("home")}  />
-            <SidebarItem icon="💊" label="Medicine Cart" open={sidebarOpen} onClick={() => setActivePage("cart")}  />
-            <SidebarItem icon="📦" label="Order History" open={sidebarOpen} />
+          <nav className="  space-y-5 text-sm font-semibold">
+            <SidebarItem icon="🏡" label="Home" open={sidebarOpen} onClick={() => {setActivePage("home");setSelectedPharmacy(null);}} />
+            <SidebarItem icon="💊" label="Medicine Cart" open={sidebarOpen} onClick={() => {setActivePage("cart");setSelectedPharmacy(null);}} />
+            <SidebarItem icon="📦" label="Order History" open={sidebarOpen} onClick={() => {setActivePage("orders");setSelectedPharmacy(null);}} />
             <SidebarItem
               icon="📝"
               label="Add Prescription"
@@ -110,38 +110,38 @@ const [activePage, setActivePage] = useState("home");
           </nav>
           <div className="absolute bottom-2 ml-4 mb-1" >
             <img onClick={() => navigate("/login",)}
-            src={"/power.svg"}
-            className={"ms-1 ml-3 h-6 w-6"}
-            alt={"Log Out"}
-          /></div>
+              src={"/power.svg"}
+              className={"ms-1 ml-3 h-6 w-6"}
+              alt={"Log Out"}
+            /></div>
         </aside>
 
-{selectedPharmacy ? (
-  <PharmacyProfile
-    pharmacy={selectedPharmacy}
-    darkMode={darkMode}
-    sidebarOpen={sidebarOpen}
-    onBack={() => setSelectedPharmacy(null)}
-    cart={cart}
-    setCart={setCart} // ← important
-    activePage={activePage}
-    />
-  ) : (
-    <Dashpg
-    darkMode={darkMode}
-    setSelectedPharmacy={setSelectedPharmacy}
-    sidebarOpen={sidebarOpen}
-    activePage={activePage}
-    cart={cart}
-  />
-)}
+        {selectedPharmacy ? (
+          <PharmacyProfile
+            pharmacy={selectedPharmacy}
+            darkMode={darkMode}
+            sidebarOpen={sidebarOpen}
+            cart={cart}
+            setCart={setCart} // ← important
+            activePage={activePage}
+          />
+        ) : (
+          <Dashpg
+            darkMode={darkMode}
+            setSelectedPharmacy={setSelectedPharmacy}
+            sidebarOpen={sidebarOpen}
+            activePage={activePage}
+            cart={cart}
+            setCart={setCart}
+          />
+        )}
 
 
       </div>
     </>
   );
 
-  function SidebarItem({ icon, label, open,onClick }) {
+  function SidebarItem({ icon, label, open, onClick }) {
     return (
       <div
         className="flex items-center gap-3 px-4 py-3 ps-7 cursor-pointer hover:bg-gray-100 dark:hover:bg-pandaWhite/10"
