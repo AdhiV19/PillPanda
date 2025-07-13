@@ -4,7 +4,11 @@ import axios from "axios";
 function Addprescription() {
   const [searchTerm, setSearchTerm] = useState("");
   const [medicines, setMedicines] = useState([]);
-  const [prescriptionList, updateLocalPrescriptionList] = useState([]);
+  const [prescriptionList, updateLocalPrescriptionList] = useState(() => {
+  const stored = localStorage.getItem("pillpanda-prescriptions");
+  return stored ? JSON.parse(stored) : [];
+});
+
   
 useEffect(() => {
   localStorage.setItem("pillpanda-prescriptions", JSON.stringify(prescriptionList));
@@ -95,32 +99,49 @@ useEffect(() => {
   };
 
   const handleTickForToday = (index) => {
-    const today = new Date().toISOString().split("T")[0];
-    updateLocalPrescriptionList(prev => {
-      const updated = [...prev];
-      const item = updated[index];
-      const doses = ['morning', 'afternoon', 'night'].filter(p => item[p] > 0);
-      const allTaken = doses.every(p => item.taken[p]);
+  const today = new Date().toISOString().split("T")[0];
+
+  updateLocalPrescriptionList((prev) => {
+    const updated = prev.map((item, i) => {
+      if (i !== index) return item; // leave others unchanged
+
+      const doses = ['morning', 'afternoon', 'night'].filter(
+        (p) => item[p] > 0
+      );
+      const allTaken = doses.every((p) => item.taken[p]);
 
       if (!allTaken) {
         alert("Please mark all scheduled doses as taken before ticking today.");
-        return prev;
+        return item;
       }
 
       if (item.lastTickDate === today) {
         alert("Today's tick has already been marked.");
-        return prev;
+        return item;
       }
 
       if (item.daysLeft > 0) {
-        item.daysLeft -= 1;
-        item.lastTickDate = today;
-        item.taken = { morning: false, afternoon: false, night: false };
+        return {
+          ...item,
+          daysLeft: item.daysLeft - 1,
+          lastTickDate: today,
+          taken: { morning: false, afternoon: false, night: false }
+        };
       }
 
-      return updated;
+      return item;
     });
-  };
+
+    // 🔐 Also update localStorage explicitly if you’re not syncing elsewhere
+    localStorage.setItem("pillpanda-prescriptions", JSON.stringify(updated));
+
+    return updated;
+  });
+};
+
+
+
+
 
   const handleDeletePrescription = (index) => {
     updateLocalPrescriptionList(prev => prev.filter((_, i) => i !== index));
@@ -135,12 +156,12 @@ useEffect(() => {
           placeholder="Search medicine by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full border px-4 py-2 rounded shadow focus:outline-none focus:ring focus:border-pandaBlue"
+          className="w-1/2 border px-4 py-2 rounded-full shadow focus:outline-none focus:ring focus:border-pandaBlue"
         />
       </div>
 
       {/* Medicine Search List */}
-      <div className="max-h-80 overflow-y-auto border border-gray-300 rounded-lg p-4 mb-6 bg-white dark:bg-zinc-800">
+      <div className="w-10/12 max-h-60 overflow-y-auto border border-gray-300 rounded-lg p-4 mb-6 bg-white dark:bg-zinc-800 shadow">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {medicines.map((med, i) => (
             <div key={i} className="border rounded shadow bg-white dark:bg-zinc-900 p-3 flex flex-col justify-between">
@@ -159,7 +180,7 @@ useEffect(() => {
         <div>
           <h3 className="text-xl font-semibold text-pandaRed mb-4">📝 Prescription List</h3>
           {prescriptionList.map((item, index) => (
-            <div key={index} className="bg-white dark:bg-zinc-800 p-4 rounded-lg shadow mb-4">
+            <div key={index} className="bg-white dark:bg-zinc-800 p-4 rounded-lg shadow mb-4 w-11/12">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div className="font-bold text-lg text-pandaBlue">{item.Name}</div>
 
@@ -172,7 +193,7 @@ useEffect(() => {
                     onChange={(e) => handleTotalDaysChange(index, e.target.value)}
                     className="border rounded px-2 py-1 w-20"
                   />
-                  <span className="text-green-500 text-sm">Left: {item.daysLeft}</span>
+                  
                 </div>
               </div>
 
@@ -191,7 +212,7 @@ useEffect(() => {
                           type="time"
                           value={item.time[period]}
                           onChange={(e) => handleTimeChange(index, period, e.target.value)}
-                          className="border rounded px-2 py-1 text-sm"
+                          className=" border rounded-full w-1/2 ml-20 px-2 py-1 text-sm"
                         />
                         <label className="flex items-center justify-center text-xs gap-1">
                           <input
