@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import Add_prescription from './components/Add_prescription'
-import Notification from './components/Notification'
+// import Notification from './components/Notification'
 import './App.css'
 
 function App() {
@@ -8,11 +8,11 @@ function App() {
 
   return (
     <div>
-    
-      <Add_prescription setPrescriptionList={setPrescriptionList} />
+    {/* setPrescriptionList={setPrescriptionList} */}
+      <Add_prescription  />
 
 
-      <Notification prescriptionList={prescriptionList} />
+      {/* <Notification prescriptionList={prescriptionList} /> */}
     </div>
   );
 }
