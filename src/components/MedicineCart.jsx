@@ -35,6 +35,11 @@ function MedicineCart({ cart, setCart, pharmacy }) {
             alert("Checkout complete. Cart cleared.");
         }
     };
+    const totalMRP = cart.reduce((sum, item) => {
+        const mrp = parseFloat(item.MRP) || 0; // Ensure MRP is numeric
+        return sum + mrp * item.quantity;
+    }, 0);
+
 
 
     return (
@@ -48,16 +53,19 @@ function MedicineCart({ cart, setCart, pharmacy }) {
                         {medicines.map((med) => (
                             <li
                                 key={med.Sno}
-                                className="bg-white dark:bg-zinc-800 px-4 py-2 rounded shadow flex justify-between"
+                                className="bg-white dark:bg-zinc-800 px-4 py-4 w-1/2 rounded shadow flex justify-between"
                             >
                                 <span>{med.Name}</span>
+                                <span>Rs. {med.MRP}/-</span>
                                 <span className="text-sm text-gray-500">Qty: {med.quantity}</span>
                             </li>
                         ))}
+                        <div className="mt-6 text-lg font-semibold text-left text-pandaBlack dark:text-pandaWhite">
+                            Total MRP: ₹{totalMRP.toFixed(2)}
+                        </div>
                     </ul>
                 </div>
             ))}
-
 
             <button
                 onClick={handleCheckout}

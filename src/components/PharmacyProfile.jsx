@@ -130,6 +130,9 @@ function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCar
                                     <div className="text-base font-medium text-pandaBlack dark:text-white truncate w-1/2">
                                         {med.Name}
                                     </div>
+                                    <div className="text-base font-medium text-pandaBlack dark:text-white truncate w-1/2">
+                                        Rs. {med.MRP}/-
+                                    </div>
 
                                     <div className="flex items-center space-x-3">
                                         <div className="flex items-center border border-gray-300 dark:border-zinc-600 rounded-md overflow-hidden bg-gray-100 dark:bg-zinc-700">
