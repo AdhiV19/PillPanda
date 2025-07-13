@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
@@ -12,7 +12,7 @@ function Profile() {
     const role = localStorage.getItem("currentUserRole") || "patients";
 
     if (!email || !role) {
-      navigate("/login"); // force redirect if not logged in
+      navigate("/login"); 
       return;
     }
 
