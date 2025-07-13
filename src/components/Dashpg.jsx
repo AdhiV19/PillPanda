@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import MedicineCart from "./MedicineCart";
 import OrderHistory from "./OrderHistory";
+import Addprescription from "./Addprescription";
+import Notification from "./Notification";
 
 function Dashpg({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart, setCart }) {
   const location = useLocation();
@@ -80,6 +82,12 @@ function Dashpg({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart, 
         )}
         {activePage === "orders" && (
           <OrderHistory/>
+        )}
+        {activePage === "prescp" && (
+          <Addprescription/>
+        )}
+        {activePage === "notif" && (
+          <Notification/>
         )}
       </main>
     </>
