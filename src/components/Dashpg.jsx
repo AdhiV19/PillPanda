@@ -5,6 +5,7 @@ import MedicineCart from "./MedicineCart";
 import OrderHistory from "./OrderHistory";
 import Addprescription from "./Addprescription";
 import Notification from "./Notification";
+import Profile from "./Profile";
 
 function Dashpg({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart, setCart }) {
   const location = useLocation();
@@ -81,14 +82,18 @@ function Dashpg({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart, 
           <MedicineCart cart={cart} setCart={setCart} pharmacy={setSelectedPharmacy} />
         )}
         {activePage === "orders" && (
-          <OrderHistory/>
+          <OrderHistory />
         )}
         {activePage === "prescp" && (
-          <Addprescription/>
+          <Addprescription />
         )}
         {activePage === "notif" && (
-          <Notification/>
+          <Notification />
         )}
+        {activePage === "profile" && (
+          <Profile user={user} />
+        )}
+
       </main>
     </>
   );

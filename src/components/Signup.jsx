@@ -165,7 +165,7 @@ function SignUp({ darkMode, setDarkMode }) {
                 <input
                   type="tel"
                   placeholder="Phone No."
-                  name="phoneno."
+                  name="phoneno"
                   className="input"
                   required
                 />
@@ -306,7 +306,7 @@ function SignUp({ darkMode, setDarkMode }) {
                 <input
                   type="tel"
                   placeholder="Registered Phone No."
-                  name="phoneno."
+                  name="phoneno"
                   className="input"
                   required
                   />

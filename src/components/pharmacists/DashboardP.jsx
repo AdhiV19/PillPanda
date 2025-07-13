@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import Dashpg from "./Dashpg";
-import PharmacyProfile from "./PharmacyProfile";
+
+import PharmacyProfile from "../PharmacyProfile";
+import DashpgP from "./DashpgP";
 
 
 
-function Dashboard({ darkMode, setDarkMode }) {
+function DashboardP({ darkMode, setDarkMode }) {
   const location = useLocation();
   const navigate = useNavigate();
   const user = location.state?.user;
@@ -95,10 +96,10 @@ function Dashboard({ darkMode, setDarkMode }) {
             </button>
           </div>
 
-          {/* Menu Items */}
+          {/* Menu Items */} 
           <nav className="  space-y-5 text-sm font-semibold">
-            <SidebarItem icon="🏡" label="Home" open={sidebarOpen} onClick={() => {setActivePage("home");setSelectedPharmacy(null);}} />
-            <SidebarItem icon="💊" label="Medicine Cart" open={sidebarOpen} onClick={() => {setActivePage("cart");setSelectedPharmacy(null);}} />
+            <SidebarItem icon="🛍" label="Orders" open={sidebarOpen} onClick={() => {setActivePage("home");setSelectedPharmacy(null);}} />
+            <SidebarItem icon="🚚" label="Shipment" open={sidebarOpen} onClick={() => {setActivePage("ship");setSelectedPharmacy(null);}} />
             <SidebarItem icon="📦" label="Order History" open={sidebarOpen} onClick={() => {setActivePage("orders");setSelectedPharmacy(null);}} />
             <SidebarItem icon="📝" label="Add Prescription" open={sidebarOpen} onClick={() => {setActivePage("prescp");setSelectedPharmacy(null);}} />
             <SidebarItem icon="🔔" label="Notifications" open={sidebarOpen} onClick={() => {setActivePage("notif");setSelectedPharmacy(null);}} />
@@ -120,10 +121,9 @@ function Dashboard({ darkMode, setDarkMode }) {
             cart={cart}
             setCart={setCart} // ← important
             activePage={activePage}
-            user={user}
           />
         ) : (
-          <Dashpg
+          <DashpgP
             darkMode={darkMode}
             setSelectedPharmacy={setSelectedPharmacy}
             sidebarOpen={sidebarOpen}
@@ -156,6 +156,6 @@ function Dashboard({ darkMode, setDarkMode }) {
   }
 }
 
-export default Dashboard;
+export default DashboardP;
 
 

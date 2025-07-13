@@ -3,11 +3,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCart }) {
+function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCart, user }) {
     const [searchQuery, setSearchQuery] = useState("");
     const [matchedMedicines, setMatchedMedicines] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [typingTimeout, setTypingTimeout] = useState(null);
+    console.log(user);
+
 
     const imagePath = darkMode
         ? `/pharma/Pharmacist${pharmacy.imageIndex}Bk.svg`
@@ -58,18 +60,31 @@ function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCar
         matchedMedicines.forEach((med) => {
             const qty = quantities[med.Sno];
 
-            if (!qty || qty <= 0) return; // ✅ skip if not explicitly set or zero
+            if (!qty || qty <= 0) return;
 
             const exists = updatedCart.find((item) => item.Sno === med.Sno);
 
+            const patientData = {
+                username: user?.username || "",
+                phone: user?.phoneno || "",
+                address: `${user?.street || ""}, ${user?.state || ""}, ${user?.pincode || ""}`,
+                pharmacyname: pharmacy?.pharmacyname || ""
+            };
+
+            
+                
+        
+
             if (exists) {
                 exists.quantity = qty;
+                exists.username = patientData.username;
+                exists.phoneno = patientData.phoneno;
+                exists.address = patientData.address;
             } else {
                 updatedCart.push({
                     ...med,
                     quantity: qty,
-                    pharmacyname: pharmacy.pharmacyname ,
-                    orderedAt: new Date().toISOString(), // ✅ include pharmacy name
+                    ...patientData
                 });
             }
         });
@@ -77,10 +92,10 @@ function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCar
         localStorage.setItem("pillpanda-cart", JSON.stringify(updatedCart));
         setCart(updatedCart);
 
-        // Reset search input and suggestions
         setSearchQuery("");
         setMatchedMedicines([]);
     };
+
 
 
 
@@ -98,14 +113,14 @@ function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCar
                     {pharmacy.pharmacyname}
                 </h1>
                 <p className="text-sm text-slateGray mt-2">{pharmacy.street}</p>
-                
+
 
                 <img
                     src={imagePath}
                     className="w-1/4 h-48 object-contain rounded mb-6 mt-4"
                     alt="Pharmacy"
-                    />
-                    
+                />
+
 
                 {/* 🔍 Search Input */}
                 <input

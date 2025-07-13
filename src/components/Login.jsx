@@ -14,11 +14,8 @@ const handleSubmit = (e) => {
   e.preventDefault();
 
   const key = isPharmacist ? "pharmacists" : "patients";
-  console.log(key);
-  
   const users = JSON.parse(localStorage.getItem(key)) || [];
-  console.log(users);
-  
+
   const userByUsername = users.find((u) => u.username === username);
 
   if (!userByUsername) {
@@ -27,9 +24,15 @@ const handleSubmit = (e) => {
     alert("Incorrect Password");
   } else {
     alert("Login successful!");
-    navigate("/dash", { state: { user: userByUsername } });
+    // 🔁 Navigate based on role
+    if (isPharmacist) {
+      navigate("/dashP", { state: { user: userByUsername, isPharmacist: true } });
+    } else {
+      navigate("/dash", { state: { user: userByUsername, isPharmacist: false } });
+    }
   }
 };
+
  
 
 

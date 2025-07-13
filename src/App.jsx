@@ -5,6 +5,7 @@ import Signup from "./components/Signup"
 import Login from "./components/Login"
 import React, { useState, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
+import DashboardP from "./components/pharmacists/DashboardP";
 
 function App() {
   const [darkMode, setDarkMode] = useState(() => {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/signup" element={<Signup darkMode={darkMode} setDarkMode={setDarkMode} />} />
         <Route path="/login" element={<Login darkMode={darkMode} setDarkMode={setDarkMode} />} />
         <Route path="/dash" element={<Dashboard darkMode={darkMode} setDarkMode={setDarkMode} />} />
+        <Route path="/dashP" element={<DashboardP darkMode={darkMode} setDarkMode={setDarkMode} />} />
       </Routes>
       </BrowserRouter>
     </>
