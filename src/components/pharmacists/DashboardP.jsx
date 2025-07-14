@@ -100,9 +100,8 @@ function DashboardP({ darkMode, setDarkMode }) {
           <nav className="  space-y-5 text-sm font-semibold">
             <SidebarItem icon="🛍" label="Orders" open={sidebarOpen} onClick={() => {setActivePage("home");setSelectedPharmacy(null);}} />
             <SidebarItem icon="🚚" label="Shipment" open={sidebarOpen} onClick={() => {setActivePage("ship");setSelectedPharmacy(null);}} />
-            <SidebarItem icon="📦" label="Order History" open={sidebarOpen} onClick={() => {setActivePage("orders");setSelectedPharmacy(null);}} />
-            <SidebarItem icon="📝" label="Add Prescription" open={sidebarOpen} onClick={() => {setActivePage("prescp");setSelectedPharmacy(null);}} />
-            <SidebarItem icon="🔔" label="Notifications" open={sidebarOpen} onClick={() => {setActivePage("notif");setSelectedPharmacy(null);}} />
+            <SidebarItem icon="📦" label="Order History" open={sidebarOpen} onClick={() => {setActivePage("deliveryhist");setSelectedPharmacy(null);}} />
+            {/*  */}
             <SidebarItem icon="🧑" label="Profile" open={sidebarOpen} onClick={() => {setActivePage("profile");setSelectedPharmacy(null);}} />
           </nav>
           <div className="absolute bottom-2 ml-4 mb-1" >

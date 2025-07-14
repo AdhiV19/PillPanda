@@ -8,7 +8,12 @@ function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCar
     const [matchedMedicines, setMatchedMedicines] = useState([]);
     const [quantities, setQuantities] = useState({});
     const [typingTimeout, setTypingTimeout] = useState(null);
-    console.log(user);
+    const [orders, setOrders] = useState([]);
+    
+        useEffect(() => {
+            const stored = JSON.parse(localStorage.getItem("pillpanda-orders")) || [];
+            setOrders(stored);
+        }, []);
 
 
     const imagePath = darkMode
@@ -37,6 +42,14 @@ function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCar
             console.error("Error fetching suggestions:", err);
         }
     };
+
+
+    
+        
+        
+        
+        
+
 
     useEffect(() => {
         if (!searchQuery) {
@@ -68,7 +81,9 @@ function PharmacyProfile({ pharmacy, darkMode, onBack, sidebarOpen, cart, setCar
                 username: user?.username || "",
                 phone: user?.phoneno || "",
                 address: `${user?.street || ""}, ${user?.state || ""}, ${user?.pincode || ""}`,
-                pharmacyname: pharmacy?.pharmacyname || ""
+                pharmacyname: pharmacy?.pharmacyname || "",
+                pincode: user?.pincode || "",
+                state: user?.state || ""
             };
 
             

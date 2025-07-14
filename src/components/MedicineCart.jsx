@@ -22,8 +22,17 @@ function MedicineCart({ cart, setCart, pharmacy }) {
 
             const newOrders = cart.map((item) => ({
                 ...item,
-                orderedAt: new Date().toISOString() // Attach current date
-            }));
+                orderedAt: new Date().toISOString(),
+                dateTime: new Date().toLocaleString("en-GB", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: false,
+                })
+
+            })); // Attach current date
 
             const updatedOrders = [...existingOrders, ...newOrders];
             localStorage.setItem("pillpanda-orders", JSON.stringify(updatedOrders));

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function OrderHistory() {
+function HistoryP() {
     const [orders, setOrders] = useState([]);
 
     useEffect(() => {
@@ -50,7 +50,7 @@ function OrderHistory() {
             {Object.entries(groupedByDate).map(([date, items]) => (
                 <div key={date} className="mb-8">
 
-                    <h2 className="text-3xl font-bold text-pandaBlue dark:text-pandaRed mb-6 underline">Order History</h2>
+                    <h2 className="text-3xl font-bold text-pandaBlue dark:text-pandaRed mb-6 underline">Delivery History</h2>
                     <h2 className="text-xl font-bold text-pandaRed dark:text-pandaBlue mb-4">Date: {date}</h2>
                     <ul className="space-y-2">
                         {items.map((item, index) => (
@@ -60,10 +60,10 @@ function OrderHistory() {
                             >
                                 <div>
                                     <p className="font-medium text-pandaBlack dark:text-pandaBlue">{item.Name}</p>
-                                    <p className="text-sm text-gray-500">From: {item.pharmacyname}</p>
+                                    <p className="text-xs  text-gray-500">To: {item.address}</p>
                                 </div>
                                 <span className="text-sm text-gray-400">Qty: {item.quantity}
-                                    <p className="text-xs text-gray-500"> {item.time}</p>
+                                    
                                 </span>
 
 
@@ -76,4 +76,4 @@ function OrderHistory() {
     );
 }
 
-export default OrderHistory;
+export default HistoryP;

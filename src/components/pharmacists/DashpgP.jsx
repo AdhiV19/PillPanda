@@ -8,12 +8,13 @@ import Notification from "../Notification";
 import Profile from "../Profile";
 import MedicineCart from "../MedicineCart";
 import Shipment from "./Shipment";
+import HistoryP from "./HistoryP";
 
 function DashpgP({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart, setCart }) {
   const location = useLocation();
   const user = location.state?.user;
   const [pharmacies, setPharmacies] = useState([]);
-  const [ordersCpy, setOrdersCpy] = useState([]);
+  const [orders, setOrders] = useState([]);
 
 
   if (!user) {
@@ -30,35 +31,42 @@ function DashpgP({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart,
     setPharmacies(data);
   }, []);
 
+
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("pillpanda-orderscpy")) || [];
-    setOrdersCpy(data);
+    const storedOrders = JSON.parse(localStorage.getItem("pillpanda-orders")) || [];
+    setOrders(storedOrders);
   }, []);
 
 
 
+
+  
+
+
+
+  const handleProceedToPack = (index) => {
+  const order = orders[index];
+
+  // Move to pillpanda-pack
+  const currentPack = JSON.parse(localStorage.getItem("pillpanda-pack")) || [];
+  const updatedPack = [...currentPack, order];
+  localStorage.setItem("pillpanda-pack", JSON.stringify(updatedPack));
+
+  // Create/append to pillpanda-ship
+  const currentShip = JSON.parse(localStorage.getItem("pillpanda-ship")) || [];
+  const updatedShip = [...currentShip, order];
+  localStorage.setItem("pillpanda-ship", JSON.stringify(updatedShip));
+
+  // Remove from pillpanda-orders
+  const updatedOrders = orders.filter((_, i) => i !== index);
+  setOrders(updatedOrders);
+  localStorage.setItem("pillpanda-orders", JSON.stringify(updatedOrders));
+};
+
+
+
   useEffect(() => {
-    const original = localStorage.getItem("pillpanda-orders");
-    localStorage.setItem("pillpanda-orderscpy", original);
-  }, []);
-
-
-
-  const handleProceedToPack = (indexToRemove) => {
-    const order = ordersCpy[indexToRemove];
-    const currentPack = JSON.parse(localStorage.getItem("pillpanda-pack")) || [];
-
-    const updatedPack = [...currentPack, order];
-    localStorage.setItem("pillpanda-pack", JSON.stringify(updatedPack));
-
-    const updatedOrders = ordersCpy.filter((_, i) => i !== indexToRemove);
-    setOrdersCpy(updatedOrders);
-    localStorage.setItem("pillpanda-orderscpy", JSON.stringify(updatedOrders));
-  };
-
-
-  useEffect(() => {
-    const cpy = localStorage.getItem("pillpanda-orders");
+    const cpy = localStorage.getItem("pillpanda-orderscpy");
     localStorage.setItem("pillpanda-ship", cpy);
   }, [handleProceedToPack]);
 
@@ -82,11 +90,11 @@ function DashpgP({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart,
               Today's Orders
             </h2>
 
-            {ordersCpy.length === 0 ? (
+            {orders.length === 0 ? (
               <p className="text-slateGray">No orders for today.</p>
             ) : (
               <div className="space-y-4">
-                {ordersCpy.map((item, idx) => (
+                {orders.map((item, idx) => (
                   <div
                     key={idx}
                     className="bg-white dark:bg-zinc-800 p-4 rounded shadow-md flex flex-col justify-between"
@@ -98,6 +106,8 @@ function DashpgP({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart,
                       <p className="text-sm text-gray-600 dark:text-gray-300 mt-4">Send To:</p>
                       <p className="text-sm text-gray-600 dark:text-gray-300">{item.username}</p>
                       <p className="text-sm text-gray-600 dark:text-gray-300">{item.address}</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 mt-4">Ordered At:</p>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{item.dateTime}</p>
                     </div>
 
                     <div className="flex justify-end">
@@ -118,8 +128,8 @@ function DashpgP({ darkMode, sidebarOpen, setSelectedPharmacy, activePage, cart,
         {activePage === "ship" && (
           <Shipment cart={cart} setCart={setCart} pharmacy={setSelectedPharmacy} />
         )}
-        {activePage === "orders" && (
-          <OrderHistory />
+        {activePage === "deliveryhist" && (
+          <HistoryP />
         )}
         {activePage === "prescp" && (
           <Addprescription />
